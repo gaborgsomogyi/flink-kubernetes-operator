@@ -132,15 +132,11 @@ function retry_times() {
 
 function check_operator_log_for_errors {
   echo "Checking for operator log errors..."
-  #https://issues.apache.org/jira/browse/FLINK-30310
-  echo "Error checking is temporarily turned off."
-  return 0
 
   operator_pod_namespace=$(get_operator_pod_namespace)
   operator_pod_name=$(get_operator_pod_name)
   echo "Operator namespace: ${operator_pod_namespace} pod: ${operator_pod_name}"
   errors=$(kubectl logs -n "${operator_pod_namespace}" "${operator_pod_name}" \
-      | grep -v "Exception while listing jobs" `#https://issues.apache.org/jira/browse/FLINK-30146` \
       | grep -v "Failed to submit a listener notification task" `#https://issues.apache.org/jira/browse/FLINK-30147` \
       | grep -v "Failed to submit job to session cluster" `#https://issues.apache.org/jira/browse/FLINK-30148` \
       | grep -v "Error during event processing" `#https://issues.apache.org/jira/browse/FLINK-30149` \
